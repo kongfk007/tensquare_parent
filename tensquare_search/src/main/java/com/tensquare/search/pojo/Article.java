@@ -6,22 +6,22 @@ import org.springframework.data.elasticsearch.annotations.Field;
 
 import java.io.Serializable;
 
-/**
- * 文章实体类
- */
-@Document(indexName="tensquare",type="article")
+@Document(indexName = "tensquare", type = "article")
 public class Article implements Serializable {
-    @Id
-    private String id;//Id
 
-    //是否索引
-    //是否分词
-    //是否储存
-    @Field(index = true,analyzer="ik_max_word",searchAnalyzer="ik_max_word")
+    @Id
+    private String id;
+
+    //是否索引，就是看该域是否能被搜索。
+    //是否分词，就表示搜索的时候是整体匹配还是单词匹配
+    //是否存储，就是是否在页面上显示
+    @Field(index = true, analyzer="ik_max_word", searchAnalyzer="ik_max_word")
     private String title;//标题
-    @Field(index = true,analyzer = "ik_max_word",searchAnalyzer = "ik_max_word")
+
+    @Field(index = true, analyzer="ik_max_word", searchAnalyzer="ik_max_word")
     private String content;//文章内容
-    private String state;//状态（是否存在，1或0表示）
+
+    private String state;//审核状态
 
     public String getId() {
         return id;
@@ -55,3 +55,4 @@ public class Article implements Serializable {
         this.state = state;
     }
 }
+

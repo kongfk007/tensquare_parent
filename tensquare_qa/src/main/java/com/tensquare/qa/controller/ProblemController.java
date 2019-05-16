@@ -2,6 +2,8 @@ package com.tensquare.qa.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.tensquare.qa.client.LabelClient;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +20,9 @@ import com.tensquare.qa.service.ProblemService;
 import entity.PageResult;
 import entity.Result;
 import entity.StatusCode;
+
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 控制器层
  * @author Administrator
@@ -30,6 +35,15 @@ public class ProblemController {
 
 	@Autowired
 	private ProblemService problemService;
+	@Autowired
+	private HttpServletRequest request;
+	@Autowired
+	private LabelClient labelClient;
+
+	@RequestMapping(value = "/label/{id}",method = RequestMethod.GET)
+	public Result findByLabelId(@PathVariable String id){
+		return new Result(true,StatusCode.OK,"查询成功",labelClient.findById(id));
+	}
 
 	/**
 	 * 热门问答列表(有分页)
@@ -117,6 +131,12 @@ public class ProblemController {
 	 */
 	@RequestMapping(method=RequestMethod.POST)
 	public Result add(@RequestBody Problem problem  ){
+		Claims claims_user = (Claims) request.getAttribute("claims_user");
+		if (claims_user==null || "".equals(claims_user)){
+			System.out.println(claims_user);
+			return new Result(false,StatusCode.ACCESSERROR,"发问失败，权限不足");
+		}
+		problem.setUserid(claims_user.getId());
 		problemService.add(problem);
 		return new Result(true,StatusCode.OK,"增加成功");
 	}

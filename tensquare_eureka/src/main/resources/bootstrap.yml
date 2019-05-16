@@ -1,0 +1,7 @@
+spring:
+  cloud:
+    config:
+      name: eureka #base-dev.yml，文件名的前缀
+      profile: dev #文件名的后缀
+      label: master
+      uri: http://134.175.29.140:12000

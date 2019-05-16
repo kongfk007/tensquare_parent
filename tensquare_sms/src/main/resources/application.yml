@@ -1,0 +1,5 @@
+spring:
+  rabbitmq:
+    host: 134.175.29.140
+  application:
+    name: tensuqare-sms #指定服务名
